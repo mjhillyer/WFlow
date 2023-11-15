@@ -28,6 +28,7 @@ from guardian.shortcuts import (assign_perm, get_objects_for_user,
 logging.basicConfig()
 logger = get_logger()
 
+ModulePythonCode = { }
 
 class AppSource(BaseModel):
     is_system_source = models.BooleanField(default=False,
@@ -371,6 +372,19 @@ class Module(BaseModel):
     def get_questions(self):
         # Return the ModuleQuestions in definition order.
         return list(self.questions.order_by('definition_order'))
+    
+    def python_functions(self):
+        # Run exec() on the Python source code stored in the spec, and cache the
+        # globally defined functions, classes, and variables.
+        global ModulePythonCode
+        if self.id not in ModulePythonCode:
+            exec(
+                self.spec.get("python-module", ""),
+                None, # default globals - TODO: Make this safe?
+                ModulePythonCode.setdefault(self.id, {}) # put locals, i.e. global definitions, here
+            )
+        return ModulePythonCode[self.id]
+
 
     def export_json(self, serializer):
         # Exports this Module's metadata to a JSON-serializable Python data structure.

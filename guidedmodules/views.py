@@ -322,6 +322,19 @@ def save_answer(request, task, answered, context, __):
         except ValueError as e:
             # client side validation should have picked this up
             return JsonResponse({ "status": "error", "message": str(e) })
+        
+        # run external functions
+        if q.spec['type'] == "external-function":
+            # Make a deepcopy of some things so that we don't allow the function
+            # to mess with our data.
+            try:
+                value = module_logic.run_external_function(
+                    q, answered,
+                    project_name=task.project.title,
+                    project_url=task.project.organization.get_url(task.project.get_absolute_url())
+                )
+            except ValueError as e:
+                return JsonResponse({ "status": "error", "message": str(e) })
 
         cleared = False
         skipped_reason = None

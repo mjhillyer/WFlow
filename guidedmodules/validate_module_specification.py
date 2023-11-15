@@ -212,7 +212,7 @@ def validate_question(mspec, spec):
 
     if spec.get("prompt") is None:
         # Prompts are optional in project and system modules but required elsewhere.
-        if mspec.get("type") not in ("project", "system-project"):
+        if mspec.get("type") not in ("project", "system-project", "external-function"):
             invalid("Question prompt is missing.")
 
     # Check that the prompt, placeholder, and default are valid Jinja2 templates.

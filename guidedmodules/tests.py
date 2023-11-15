@@ -141,6 +141,12 @@ class ImputeConditionTests(TestCaseWithFixtureData):
         # test("q_datagrid", ["field1", "field3"], "'field2' in q_datagrid", False)
         # test("q_datagrid", None, "q_datagrid", False) # skipped is falsey
 
+        # We're not calling the external function here - just using it
+        # given some return value.
+        test("q_external_function", False, "q_external_function", True) # answered is truthy, even if False
+        test("q_external_function", "VALUE", "q_external_function", True) # should be Pythonic truthy
+        test("q_external_function", None, "q_external_function", False) # but skipped/None are false
+
     def test_impute_using_numeric_questions(self):
         test = lambda *args : self._test_condition_helper("question_types_numeric", *args)
 
@@ -169,6 +175,12 @@ class ImputeConditionTests(TestCaseWithFixtureData):
 
         # Interstitial questions never have value.
         test("q_interstitial", None, "q_interstitial", False)
+
+        # We're not calling the external function here - just using it
+        # given some return value.
+        test("q_external_function", False, "q_external_function", True) # answered is truthy, even if False
+        test("q_external_function", "VALUE", "q_external_function", True) # should be Pythonic truthy
+        test("q_external_function", None, "q_external_function", False) # but skipped/None are falsey
 
     def test_impute_using_module_questions(self):
         test = lambda *args : self._test_condition_helper("question_types_module", *args)
@@ -502,6 +514,14 @@ class RenderTests(TestCaseWithFixtureData):
         # test("q_datagrid", None, "", # not answered appears as nothing selected
         #     template="{% for field in q_datagrid %}[{{field}}]{% endfor %}")
 
+        # We're not calling the external function here - just rendering it
+        # given some return value. It's not really intended to be rendered
+        # since its value can be any Python data structure.
+        test("q_external_function", "VALUE", "VALUE")
+        test("q_external_function.text", "VALUE", "VALUE")
+        test("q_external_function", None, escape("<external-function>"), None) # is actually the question's title, not its type, and {{...}} differently than in an impute condition
+        test("q_external_function.text", None, escape("<not answered>"))
+
     def test_render_numeric_questions(self):
         def test(*args):
             self._test_render_single_question_md("question_types_numeric", *args)
@@ -541,6 +561,14 @@ class RenderTests(TestCaseWithFixtureData):
         # Interstitial questions never have value.
         test("q_interstitial", None, escape("<interstitial>"), None) # is actually the question's title, not its type, and {{...}} differently than in an impute condition
         test("q_interstitial.text", None, escape("<not answered>"))
+
+        # We're not calling the external function here - just rendering it
+        # given some return value. It's not really intended to be rendered
+        # since its value can be any Python data structure.
+        test("q_external_function", "VALUE", "VALUE")
+        test("q_external_function.text", "VALUE", "VALUE")
+        test("q_external_function", None, escape("<external-function>"), None) # is actually the question's title, not its type, and {{...}} differently than in an impute condition
+        test("q_external_function.text", None, escape("<not answered>"))
 
     def test_render_module_questions(self):
         def test(*args):
@@ -713,6 +741,7 @@ class ImportExportTests(TestCaseWithFixtureData):
             },
             "question_types_media": {
                 "interstitial": [None],
+                "external-function": [{ "arbitrary": ["data"] }],
             },
         }
 

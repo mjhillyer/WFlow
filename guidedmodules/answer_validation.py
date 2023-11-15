@@ -129,6 +129,12 @@ class question_input_parser:
         if value != "":
             raise ValueError("Invalid input.")
         return None
+    
+    def parse_external_function(question, value):
+        # the user doesn't answer these directly
+        if value != "":
+            raise ValueError("Invalid input.")
+        return None # doesn't matter
 
 
 class validator:
@@ -290,6 +296,10 @@ class validator:
             raise ValueError("Must be at most %g." % question.spec["max"])
         return value
 
+    def validate_external_function(question, value):
+        # Any data structure is OK.
+        return value
+    
     def validate_file(question, value):
         # The JSON-serializable data structure for a file is a dict like:
         #
