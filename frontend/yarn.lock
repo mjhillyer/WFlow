@@ -1324,6 +1324,19 @@
   "resolved" "https://registry.npmjs.org/@mui/x-data-grid/-/x-data-grid-5.17.26.tgz"
   "version" "5.17.26"
   dependencies:
+    "@mui/system@^5.4.1"
+    "@babel/runtime" "^7.18.9"
+    "@mui/utils" "^5.10.3"
+    "clsx" "^1.2.1"
+    "prop-types" "^15.8.1"
+    "reselect" "^4.1.6"
+
+"@mui/x-data-grid@^5.17.26":
+  "integrity" "sha512-eGJq9J0g9cDGLFfMmugOadZx0mJeOd/yQpHwEa5gUXyONS6qF0OhXSWyDOhDdA3l2TOoQzotMN5dY/T4Wl1KYA=="
+  "resolved" "https://registry.npmjs.org/@mui/x-data-grid/-/x-data-grid-5.17.26.tgz"
+  "version" "5.17.26"
+  dependencies:
+    "@mui/system@^5.4.1"
     "@babel/runtime" "^7.18.9"
     "@mui/utils" "^5.10.3"
     "clsx" "^1.2.1"
